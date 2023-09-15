@@ -28,7 +28,7 @@ To compile and build the cli, please follow these steps:
 
 ## Download
 
-The latest version and the previous ones are available on (Releases)<https://github.com/paolobellardone/oci_reports_download/releases> page
+The latest version and the previous ones are available on [Releases](<https://github.com/paolobellardone/oci_reports_download/releases>) page
 
 ## Usage
 
