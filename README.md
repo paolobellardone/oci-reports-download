@@ -20,7 +20,7 @@ To compile and build the cli, please follow these steps:
   - a working **go** installation
 - Download or clone this repository
   - link to download or
-  - command to clone
+  - `git clone https://github.com/paolobellardone/oci_reports_download.git`
 - Run this command to compile and build the cli
   - `make clean build`
 - Copy your brand new cli in a directory of your choice, ideally on your binary path
