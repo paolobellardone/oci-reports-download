@@ -1,0 +1,211 @@
+/*
+Copyright © 2023 PaoloB
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
+package cmd
+
+import (
+	"compress/gzip"
+	"context"
+	"fmt"
+	"io"
+	"log"
+	"os"
+	"os/user"
+	"path/filepath"
+	"strings"
+
+	"github.com/spf13/cobra"
+
+	"github.com/oracle/oci-go-sdk/v65/common"
+	"github.com/oracle/oci-go-sdk/v65/objectstorage"
+)
+
+// Constants used throughout the cli
+const (
+	// Change the version when write new code or modify it
+	cliVersion = "1.0.0"
+	// DO NOT CHANGE the values below
+	cfgDirName         = ".oci"
+	cfgFileName        = "config"
+	reportingNamespace = "bling"
+)
+
+// rootCmd represents the base command
+var rootCmd = &cobra.Command{
+	Use:     "oci_reports_download",
+	Short:   "Download usage and cost report files from your OCI tenancy",
+	Long:    `Download usage and cost report files from your OCI tenancy`,
+	Version: cliVersion,
+	Run: func(cmd *cobra.Command, args []string) {
+		// Defined flags for the cli
+		var tenancyOcid string // This is required
+		var reportType string
+		var profileName string
+		var reportPeriod string
+		var uncompressFiles bool
+
+		// Read the flags from the command line
+		tenancyOcid, _ = cmd.Flags().GetString("tenancy")
+		reportType, _ = cmd.Flags().GetString("report-type")
+		profileName, _ = cmd.Flags().GetString("profile")
+		reportPeriod, _ = cmd.Flags().GetString("period")
+		uncompressFiles, _ = cmd.Flags().GetBool("uncompress")
+
+		// Get home folder for user and get the config file path
+		homeFolder := getHomeFolder()
+		configFilePath := filepath.Join(homeFolder, cfgDirName, cfgFileName)
+
+		// Create a new OCI Object Storage client to invoke the APIs
+		osClient, ociErr := objectstorage.NewObjectStorageClientWithConfigurationProvider(common.CustomProfileConfigProvider(configFilePath, profileName))
+		exitOnError(ociErr)
+
+		// Get a context for the cli
+		ctx := context.Background()
+
+		// Create a ListObjectRequest with fields filled with values coming from cli flags
+		loReq := objectstorage.ListObjectsRequest{
+			NamespaceName: common.String(reportingNamespace),
+			BucketName:    common.String(tenancyOcid),
+			Fields:        common.String("name,size,timeCreated"),
+		}
+
+		switch reportType {
+		case "usage":
+			loReq.Prefix = common.String("reports/usage-csv/")
+		case "cost":
+			loReq.Prefix = common.String("reports/cost-csv/")
+		case "all":
+		default:
+		}
+
+		// Invoke the ListObjects APIs to get the selected report files
+		for loRsp, ociErr := osClient.ListObjects(ctx, loReq); ; loRsp, ociErr = osClient.ListObjects(ctx, loReq) {
+			exitOnError(ociErr)
+			for _, value := range loRsp.ListObjects.Objects {
+				// Filter files by date, if needed
+				if strings.Contains(value.TimeCreated.Format("2006-01-02"), reportPeriod) {
+					// Download a report file
+					fmt.Print("Downloading file ", *value.Name)
+					goReq := objectstorage.GetObjectRequest{
+						NamespaceName: common.String(reportingNamespace),
+						BucketName:    common.String(tenancyOcid),
+						ObjectName:    common.String(*value.Name),
+					}
+
+					goRes, ociErr := osClient.GetObject(ctx, goReq)
+					exitOnError(ociErr)
+
+					// Save the file locally
+					fileName := strings.TrimPrefix(*value.Name, *loReq.Prefix)
+					file, err := os.Create(fileName)
+					exitOnError(err)
+					defer file.Close()
+
+					written, err := io.Copy(file, goRes.Content)
+					if err != nil || written != *goRes.ContentLength {
+						exitOnError(err)
+					}
+
+					// Unzip the file, if needed
+					if uncompressFiles {
+						unzipFile(fileName)
+					}
+					fmt.Println(" Done!")
+				}
+			}
+			if loRsp.ListObjects.NextStartWith != nil {
+				loReq.Start = loRsp.ListObjects.NextStartWith
+			} else {
+				break
+			}
+		}
+
+	},
+}
+
+// Configure and run the cli
+func Execute() {
+	// Print a banner
+	cliName, _ := os.Getwd()
+	banner := filepath.Base(cliName) + " " + cliVersion
+	fmt.Println(banner)
+	fmt.Println(strings.Repeat("-", len(banner)))
+
+	// Execute the cli
+	err := rootCmd.Execute()
+	if err != nil {
+		os.Exit(1)
+	}
+}
+
+// Initialize the cli with supported flags and their default values
+func init() {
+	rootCmd.Flags().StringP("tenancy", "t", "", "the OCID of your tenancy (required)")
+	rootCmd.Flags().StringP("report-type", "r", "all", "the type of report to download - allowed values: all, usage, cost")
+	rootCmd.Flags().StringP("profile", "p", "DEFAULT", "the profile defined in ~/.oci/config to use to connect to OCI")
+	rootCmd.Flags().StringP("period", "d", "", "the period of time to consider for reports - allowed values: yyyy-mm-dd, yyyy-mm, yyyy")
+	rootCmd.Flags().BoolP("uncompress", "u", false, "uncompress the downloaded files")
+}
+
+// Utility functions
+
+// Get the user's home folder
+func getHomeFolder() string {
+	current, e := user.Current()
+	if e != nil {
+		// Give up and try to return something sensible
+		home := os.Getenv("HOME")
+		if home == "" {
+			home = os.Getenv("USERPROFILE")
+		}
+		return home
+	}
+	return current.HomeDir
+}
+
+// Fatal exit on error
+func exitOnError(err error) {
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+}
+
+// Unzip a file
+func unzipFile(fileName string) {
+	file, err := os.Open(fileName)
+	exitOnError(err)
+	defer file.Close()
+
+	reader, err := gzip.NewReader(file)
+	exitOnError(err)
+	defer reader.Close()
+
+	outFile, err := os.Create(strings.TrimSuffix(fileName, ".gz"))
+	exitOnError(err)
+	defer outFile.Close()
+
+	_, err = io.Copy(outFile, reader)
+	exitOnError(err)
+
+	err = os.Remove(fileName)
+	exitOnError(err)
+}
