@@ -33,16 +33,16 @@ The latest version and the previous ones are available on [Releases](<https://gi
 ## Usage
 
 Usage:  
-&nbsp;oci_reports_download [flags]
+&nbsp;oci-reports-download [flags]
 
 Flags:  
-&nbsp;&nbsp;-t, --tenancy string&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the OCID of your tenancy (required)  
-&nbsp;&nbsp;-r, --report-type string&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the type of report to download - allowed values: all, usage, cost (default "all")  
-&nbsp;&nbsp;-i, --report-interval string&nbsp;&nbsp;&nbsp;the period of time to consider for reports - allowed values: yyyy-mm-dd, yyyy-mm, yyyy  
-&nbsp;&nbsp;-p, --profile string&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the profile defined in ~/.oci/config to use to connect to OCI (default "DEFAULT")  
-&nbsp;&nbsp;-u, --uncompress&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uncompress the downloaded files  
-&nbsp;&nbsp;-h, --help&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;help for oci_reports_download  
-&nbsp;&nbsp;-v, --version&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;version for oci_reports_download
+&nbsp;-t, --tenancy string&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the OCID of your tenancy (required)  
+&nbsp;-r, --report-type string&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the type of report to download - allowed values: all, usage, cost (default "all")  
+&nbsp;-i, --report-interval string&nbsp;&nbsp;&nbsp;the period of time to consider for reports - allowed values: yyyy-mm-dd, yyyy-mm, yyyy  
+&nbsp;-p, --profile string&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the profile defined in ~/.oci/config to use to connect to OCI (default "DEFAULT")  
+&nbsp;-u, --uncompress&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uncompress the downloaded files  
+&nbsp;-h, --help&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;help for oci_reports_download  
+&nbsp;-v, --version&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;version for oci_reports_download
 
 Date formats:
 
