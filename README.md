@@ -33,20 +33,20 @@ The latest version and the previous ones are available on [Releases](<https://gi
 ## Usage
 
 Usage:  
-&nbsp;&nbsp;oci_reports_download [flags]
+&ensp;oci_reports_download [flags]
 
 Flags:  
-&nbsp;&nbsp;-h, --help                 help for oci_reports_download  
-&nbsp;&nbsp;-d, --period string        the period of time to consider for reports - allowed values: yyyy-mm-dd, yyyy-mm, yyyy  
-&nbsp;&nbsp;-p, --profile string       the profile defined in ~/.oci/config to use to connect to OCI (default "DEFAULT")  
-&nbsp;&nbsp;-r, --report-type string   the type of report to download - allowed values: all, usage, cost (default "all")  
-&nbsp;&nbsp;-t, --tenancy string       the OCID of your tenancy (required)  
-&nbsp;&nbsp;-u, --uncompress           uncompress the downloaded files  
-&nbsp;&nbsp;-v, --version              version for oci_reports_download  
+&ensp;-t, --tenancy string&emsp;&emsp;           the OCID of your tenancy (required)
+&ensp;-r, --report-type string&emsp;&emsp;       the type of report to download - allowed values: all, usage, cost (default "all")
+&ensp;-i, --report-interval string&emsp;   the period of time to consider for reports - allowed values: yyyy-mm-dd, yyyy-mm, yyyy
+&ensp;-p, --profile string&emsp;&emsp;           the profile defined in ~/.oci/config to use to connect to OCI (default "DEFAULT")
+&ensp;-u, --uncompress&emsp;&emsp;               uncompress the downloaded files
+&ensp;-h, --help&emsp;&emsp;                     help for oci_reports_download
+&ensp;-v, --version&emsp;&emsp;                  version for oci_reports_download
 
 Date formats:
 
 - YYYY: all the files for the specified year
 - YYYY-MM: all the files for the specified month
 - YYYY-MM-DD: all the files for the specified day
-- If the argument --period|-d is not specified, the cli will download all the available files in the usage and cost pools
+- If the argument --report-interval|-i is not specified, the cli will download all the available files in the usage and cost pools

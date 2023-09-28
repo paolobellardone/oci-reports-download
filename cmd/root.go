@@ -42,7 +42,7 @@ import (
 // Constants used throughout the cli
 const (
 	// Change the version when write new code or modify it
-	cliVersion = "1.0.0"
+	cliVersion = "1.0.1"
 	// DO NOT CHANGE the values below
 	cfgDirName         = ".oci"
 	cfgFileName        = "config"
@@ -56,18 +56,19 @@ var rootCmd = &cobra.Command{
 	Long:    `Download usage and cost report files from your OCI tenancy`,
 	Version: cliVersion,
 	Run: func(cmd *cobra.Command, args []string) {
+
 		// Defined flags for the cli
 		var tenancyOcid string // This is required
 		var reportType string
 		var profileName string
-		var reportPeriod string
+		var reportInterval string
 		var uncompressFiles bool
 
 		// Read the flags from the command line
 		tenancyOcid, _ = cmd.Flags().GetString("tenancy")
 		reportType, _ = cmd.Flags().GetString("report-type")
 		profileName, _ = cmd.Flags().GetString("profile")
-		reportPeriod, _ = cmd.Flags().GetString("period")
+		reportInterval, _ = cmd.Flags().GetString("report-interval")
 		uncompressFiles, _ = cmd.Flags().GetBool("uncompress")
 
 		// Get home folder for user and get the config file path
@@ -102,7 +103,7 @@ var rootCmd = &cobra.Command{
 			exitOnError(ociErr)
 			for _, value := range loRsp.ListObjects.Objects {
 				// Filter files by date, if needed
-				if strings.Contains(value.TimeCreated.Format("2006-01-02"), reportPeriod) {
+				if strings.Contains(value.TimeCreated.Format("2006-01-02"), reportInterval) {
 					// Download a report file
 					fmt.Print("Downloading file ", *value.Name)
 					goReq := objectstorage.GetObjectRequest{
@@ -116,19 +117,32 @@ var rootCmd = &cobra.Command{
 
 					// Save the file locally
 					fileName := strings.TrimPrefix(*value.Name, *loReq.Prefix)
-					file, err := os.Create(fileName)
-					exitOnError(err)
-					defer file.Close()
-
-					written, err := io.Copy(file, goRes.Content)
-					if err != nil || written != *goRes.ContentLength {
-						exitOnError(err)
-					}
-
-					// Unzip the file, if needed
 					if uncompressFiles {
-						unzipFile(fileName)
+						outFile, err := os.Create(strings.TrimSuffix(fileName, ".gz"))
+						exitOnError(err)
+						defer outFile.Close()
+
+						reader, err := gzip.NewReader(goRes.Content)
+						exitOnError(err)
+						defer reader.Close()
+
+						_, err = io.Copy(outFile, reader)
+						exitOnError(err)
+					} else {
+						outCompressedFile, err := os.Create(fileName)
+						exitOnError(err)
+						defer outCompressedFile.Close()
+
+						written, err := io.Copy(outCompressedFile, goRes.Content)
+						if err != nil || written != *goRes.ContentLength {
+							exitOnError(err)
+						}
 					}
+
+					// Unzip the file, if needed -- TODO: modificare la logica, mettere il check prima così non scrivo due volte!
+					//if uncompressFiles {
+					//	unzipFile(fileName)
+					//}
 					fmt.Println(" Done!")
 				}
 			}
@@ -160,10 +174,12 @@ func Execute() {
 // Initialize the cli with supported flags and their default values
 func init() {
 	rootCmd.Flags().StringP("tenancy", "t", "", "the OCID of your tenancy (required)")
+	rootCmd.MarkFlagRequired("tenancy")
 	rootCmd.Flags().StringP("report-type", "r", "all", "the type of report to download - allowed values: all, usage, cost")
+	rootCmd.Flags().StringP("report-interval", "i", "", "the period of time to consider for reports - allowed values: yyyy-mm-dd, yyyy-mm, yyyy")
 	rootCmd.Flags().StringP("profile", "p", "DEFAULT", "the profile defined in ~/.oci/config to use to connect to OCI")
-	rootCmd.Flags().StringP("period", "d", "", "the period of time to consider for reports - allowed values: yyyy-mm-dd, yyyy-mm, yyyy")
 	rootCmd.Flags().BoolP("uncompress", "u", false, "uncompress the downloaded files")
+	rootCmd.Flags().SortFlags = false
 }
 
 // Utility functions
@@ -172,10 +188,10 @@ func init() {
 func getHomeFolder() string {
 	current, e := user.Current()
 	if e != nil {
-		// Give up and try to return something sensible
-		home := os.Getenv("HOME")
+		// If the user.Current() method does not work, it reads the user's home folder from the enviroment
+		home := os.Getenv("HOME") // Linux/MacOS
 		if home == "" {
-			home = os.Getenv("USERPROFILE")
+			home = os.Getenv("USERPROFILE") // Windows
 		}
 		return home
 	}
@@ -187,25 +203,4 @@ func exitOnError(err error) {
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
-}
-
-// Unzip a file
-func unzipFile(fileName string) {
-	file, err := os.Open(fileName)
-	exitOnError(err)
-	defer file.Close()
-
-	reader, err := gzip.NewReader(file)
-	exitOnError(err)
-	defer reader.Close()
-
-	outFile, err := os.Create(strings.TrimSuffix(fileName, ".gz"))
-	exitOnError(err)
-	defer outFile.Close()
-
-	_, err = io.Copy(outFile, reader)
-	exitOnError(err)
-
-	err = os.Remove(fileName)
-	exitOnError(err)
 }

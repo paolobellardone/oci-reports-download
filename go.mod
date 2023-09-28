@@ -23,7 +23,7 @@ module github.com/paolobellardone/oci_reports_download
 go 1.21.1
 
 require (
-	github.com/oracle/oci-go-sdk/v65 v65.49.1
+	github.com/oracle/oci-go-sdk/v65 v65.49.2
 	github.com/spf13/cobra v1.7.0
 )
 
