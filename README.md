@@ -19,8 +19,8 @@ To compile and build the cli, please follow these steps:
 - Prerequisite
   - a working **go** installation
 - Download or clone this repository
-  - <https://github.com/paolobellardone/oci_reports_download/archive/refs/heads/main.zip>
-  - `git clone https://github.com/paolobellardone/oci_reports_download.git`
+  - <https://github.com/paolobellardone/oci-reports-download/archive/refs/heads/main.zip>
+  - `git clone https://github.com/paolobellardone/oci-reports-download.git`
 - Run this command to compile and build the cli
   - `make clean build`
 - Copy your brand new cli in a directory of your choice, ideally on your binary path
