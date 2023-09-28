@@ -33,16 +33,16 @@ The latest version and the previous ones are available on [Releases](<https://gi
 ## Usage
 
 Usage:  
-&ensp;oci_reports_download [flags]
+&nbsp;oci_reports_download [flags]
 
 Flags:  
-&ensp;-t, --tenancy string&emsp;&emsp;           the OCID of your tenancy (required)
-&ensp;-r, --report-type string&emsp;&emsp;       the type of report to download - allowed values: all, usage, cost (default "all")
-&ensp;-i, --report-interval string&emsp;   the period of time to consider for reports - allowed values: yyyy-mm-dd, yyyy-mm, yyyy
-&ensp;-p, --profile string&emsp;&emsp;           the profile defined in ~/.oci/config to use to connect to OCI (default "DEFAULT")
-&ensp;-u, --uncompress&emsp;&emsp;               uncompress the downloaded files
-&ensp;-h, --help&emsp;&emsp;                     help for oci_reports_download
-&ensp;-v, --version&emsp;&emsp;                  version for oci_reports_download
+&nbsp;&nbsp;-t, --tenancy string&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the OCID of your tenancy (required)  
+&nbsp;&nbsp;-r, --report-type string&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the type of report to download - allowed values: all, usage, cost (default "all")  
+&nbsp;&nbsp;-i, --report-interval string&nbsp;&nbsp;&nbsp;the period of time to consider for reports - allowed values: yyyy-mm-dd, yyyy-mm, yyyy  
+&nbsp;&nbsp;-p, --profile string&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the profile defined in ~/.oci/config to use to connect to OCI (default "DEFAULT")  
+&nbsp;&nbsp;-u, --uncompress&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uncompress the downloaded files  
+&nbsp;&nbsp;-h, --help&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;help for oci_reports_download  
+&nbsp;&nbsp;-v, --version&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;version for oci_reports_download
 
 Date formats:
 

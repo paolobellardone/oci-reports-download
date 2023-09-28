@@ -138,11 +138,6 @@ var rootCmd = &cobra.Command{
 							exitOnError(err)
 						}
 					}
-
-					// Unzip the file, if needed -- TODO: modificare la logica, mettere il check prima così non scrivo due volte!
-					//if uncompressFiles {
-					//	unzipFile(fileName)
-					//}
 					fmt.Println(" Done!")
 				}
 			}
