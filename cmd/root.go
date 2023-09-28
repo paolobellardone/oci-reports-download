@@ -44,6 +44,7 @@ const (
 	// Change the version when write new code or modify it
 	cliVersion = "1.0.1"
 	// DO NOT CHANGE the values below
+	cliName            = "oci-reports-download"
 	cfgDirName         = ".oci"
 	cfgFileName        = "config"
 	reportingNamespace = "bling"
@@ -51,7 +52,7 @@ const (
 
 // rootCmd represents the base command
 var rootCmd = &cobra.Command{
-	Use:     "oci_reports_download",
+	Use:     cliName,
 	Short:   "Download usage and cost report files from your OCI tenancy",
 	Long:    `Download usage and cost report files from your OCI tenancy`,
 	Version: cliVersion,
@@ -154,8 +155,7 @@ var rootCmd = &cobra.Command{
 // Configure and run the cli
 func Execute() {
 	// Print a banner
-	cliName, _ := os.Getwd()
-	banner := filepath.Base(cliName) + " " + cliVersion
+	banner := cliName + " " + cliVersion
 	fmt.Println(banner)
 	fmt.Println(strings.Repeat("-", len(banner)))
 
