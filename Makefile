@@ -22,9 +22,9 @@ BINARY_NAME=oci-reports-download
 
 build:
 	mkdir executables
-	GOARCH=amd64 GOOS=darwin go build -o executables/${BINARY_NAME}.darwin
-	GOARCH=amd64 GOOS=linux go build -o executables/${BINARY_NAME}.linux
-	GOARCH=amd64 GOOS=windows go build -o executables/${BINARY_NAME}.exe
+	GOARCH=amd64 GOOS=darwin go build -ldflags="-s -w" -o executables/${BINARY_NAME}.darwin
+	GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o executables/${BINARY_NAME}.linux
+	GOARCH=amd64 GOOS=windows go build -ldflags="-s -w" -o executables/${BINARY_NAME}.exe
 
 install:
 	cp executables/${BINARY_NAME}.darwin ${BINARY_NAME}
