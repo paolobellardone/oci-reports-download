@@ -22,7 +22,7 @@ THE SOFTWARE.
 
 package main
 
-import "github.com/paolobellardone/oci_reports_download/cmd"
+import "github.com/paolobellardone/oci-reports-download/cmd"
 
 // Main program entry point
 func main() {

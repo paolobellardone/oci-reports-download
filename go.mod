@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-module github.com/paolobellardone/oci_reports_download
+module github.com/paolobellardone/oci-reports-download
 
-go 1.21.3
+go 1.21.5
 
 require (
 	github.com/oracle/oci-go-sdk/v65 v65.55.0
