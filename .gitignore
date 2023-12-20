@@ -44,3 +44,4 @@ go.work
 executables/
 .vscode/
 .DS_Store
+oci-reports-download
