@@ -10,7 +10,7 @@ In order to be able to use the cli, you have to implement the following prerequi
 - Create an OCI configuration file (<https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdkconfig.htm>) and optionally install oci-cli (<https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm>)
 - Configure the OCI policies needed to access to the reports (<https://docs.oracle.com/en-us/iaas/Content/Billing/Concepts/usagereportsoverview.htm>)
 - Compile or download the compiled binary (see below) and into a directory of your choice, ideally in your path
-- Make the cli executable with the command `chmod +x oci_reports_download`
+- Make the cli executable with the command `chmod +x oci-reports-download`
 
 ## Compile and Build
 
