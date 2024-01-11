@@ -1,6 +1,6 @@
 # oci-reports-download
 
-A cli to download the usage and costs reports from OCI tenancy
+A cli to download the usage and costs reports from OCI tenancy  
 Developed and tested on Mac, it works also on Linux and Windows
 
 ## Prerequisites
