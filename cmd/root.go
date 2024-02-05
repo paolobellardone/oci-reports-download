@@ -27,6 +27,7 @@ package cmd
 import (
 	"compress/gzip"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -44,12 +45,14 @@ import (
 // Constants used throughout the cli
 const (
 	// Change the version when write new code or modify it
-	cliVersion = "1.0.3"
+	cliVersion = "1.0.5"
 	// DO NOT CHANGE the values below
 	cliName            = "oci-reports-download"
 	cfgDirName         = ".oci"
 	cfgFileName        = "config"
 	reportingNamespace = "bling"
+	costPrefix         = "reports/cost-csv/"
+	usagePrefix        = "reports/usage-csv/"
 )
 
 // rootCmd represents the base command
@@ -60,15 +63,14 @@ var rootCmd = &cobra.Command{
 	Version: cliVersion,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		// Defined flags for the cli
-		var tenancyOcid string // This is required
-		var reportType string
+		// Defined parameters for the cli
+		var tenancyOcid string
+		var reportType string // This is required
 		var profileName string
 		var reportInterval string
 		var uncompressFiles bool
 
 		// Read the flags from the command line
-		tenancyOcid, _ = cmd.Flags().GetString("tenancy")
 		reportType, _ = cmd.Flags().GetString("report-type")
 		profileName, _ = cmd.Flags().GetString("profile")
 		reportInterval, _ = cmd.Flags().GetString("report-interval")
@@ -79,7 +81,10 @@ var rootCmd = &cobra.Command{
 		configFilePath := filepath.Join(homeFolder, cfgDirName, cfgFileName)
 
 		// Create a new OCI Object Storage client to invoke the APIs
-		osClient, ociErr := objectstorage.NewObjectStorageClientWithConfigurationProvider(common.CustomProfileConfigProvider(configFilePath, profileName))
+		configurationProvider := common.CustomProfileConfigProvider(configFilePath, profileName)
+		// Read the tenancy from the .oci/config specified profile
+		tenancyOcid, _ = configurationProvider.TenancyOCID()
+		osClient, ociErr := objectstorage.NewObjectStorageClientWithConfigurationProvider(configurationProvider)
 		exitOnError(ociErr)
 
 		// Get a context for the cli
@@ -92,13 +97,14 @@ var rootCmd = &cobra.Command{
 			Fields:        common.String("name,size,timeCreated"),
 		}
 
+		// Check which reports should be downloaded
 		switch reportType {
-		case "usage":
-			loReq.Prefix = common.String("reports/usage-csv/")
 		case "cost":
-			loReq.Prefix = common.String("reports/cost-csv/")
-		case "all":
+			loReq.Prefix = common.String(costPrefix)
+		case "usage":
+			loReq.Prefix = common.String(usagePrefix)
 		default:
+			exitOnError(errors.New("Invalid argument for parameter report-type. Allowed values are: cost, usage"))
 		}
 
 		// Invoke the ListObjects APIs to get the selected report files
@@ -170,11 +176,10 @@ func Execute() {
 
 // Initialize the cli with supported flags and their default values
 func init() {
-	rootCmd.Flags().StringP("tenancy", "t", "", "the OCID of your tenancy (required)")
-	rootCmd.MarkFlagRequired("tenancy")
-	rootCmd.Flags().StringP("report-type", "r", "all", "the type of report to download - allowed values: all, usage, cost")
+	rootCmd.Flags().StringP("report-type", "t", "", "the type of report to download - allowed values: usage, cost")
+	rootCmd.MarkFlagRequired("report-type")
 	rootCmd.Flags().StringP("report-interval", "i", "", "the period of time to consider for reports - allowed values: yyyy-mm-dd, yyyy-mm, yyyy")
-	rootCmd.Flags().StringP("profile", "p", "DEFAULT", "the profile defined in ~/.oci/config to use to connect to OCI")
+	rootCmd.Flags().StringP("profile", "p", "DEFAULT", "the profile defined in ~/.oci/config to use to connect to OCI (case-sensitive)")
 	rootCmd.Flags().BoolP("uncompress", "u", false, "uncompress the downloaded files")
 	rootCmd.Flags().SortFlags = false
 }

@@ -36,10 +36,9 @@ Usage:
 &nbsp;oci-reports-download [flags]
 
 Flags:  
-&nbsp;-t, --tenancy string&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the OCID of your tenancy (required)  
-&nbsp;-r, --report-type string&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the type of report to download - allowed values: all, usage, cost (default "all")  
+&nbsp;-t, --report-type string&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the type of report to download - allowed values: cost, usage - **REQUIRED**  
 &nbsp;-i, --report-interval string&nbsp;&nbsp;&nbsp;the period of time to consider for reports - allowed values: yyyy-mm-dd, yyyy-mm, yyyy  
-&nbsp;-p, --profile string&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the profile defined in ~/.oci/config to use to connect to OCI (default "DEFAULT")  
+&nbsp;-p, --profile string&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the profile defined in ~/.oci/config to use to connect to OCI (**case-sensitive**) (default "DEFAULT")  
 &nbsp;-u, --uncompress&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uncompress the downloaded files  
 &nbsp;-h, --help&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;help for oci-reports-download  
 &nbsp;-v, --version&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;version for oci-reports-download
