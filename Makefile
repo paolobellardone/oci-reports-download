@@ -24,12 +24,13 @@ BINARY_NAME=oci-reports-download
 
 build:
 	mkdir executables
-	GOARCH=amd64 GOOS=darwin go build -ldflags="-s -w" -o executables/${BINARY_NAME}.macos
+	GOARCH=amd64 GOOS=darwin go build -ldflags="-s -w" -o executables/${BINARY_NAME}.macos.amd64
+	GOARCH=arm64 GOOS=darwin go build -ldflags="-s -w" -o executables/${BINARY_NAME}.macos.arm64
 	GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o executables/${BINARY_NAME}.linux
 	GOARCH=amd64 GOOS=windows go build -ldflags="-s -w" -o executables/${BINARY_NAME}.exe
 
 install:
-	cp executables/${BINARY_NAME}.macos ${BINARY_NAME}
+	cp executables/${BINARY_NAME}.macos.arm64 ${BINARY_NAME}
 
 run: build
 	./${BINARY_NAME}
