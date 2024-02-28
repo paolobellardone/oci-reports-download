@@ -24,10 +24,10 @@
 
 module github.com/paolobellardone/oci-reports-download
 
-go 1.21.6
+go 1.22.0
 
 require (
-	github.com/oracle/oci-go-sdk/v65 v65.57.0
+	github.com/oracle/oci-go-sdk/v65 v65.60.0
 	github.com/spf13/cobra v1.8.0
 )
 
@@ -36,5 +36,5 @@ require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/sony/gobreaker v0.5.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	golang.org/x/sys v0.16.0 // indirect
+	golang.org/x/sys v0.17.0 // indirect
 )
