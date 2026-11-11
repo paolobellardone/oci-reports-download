@@ -45,7 +45,7 @@ import (
 // Constants used throughout the cli
 const (
 	// Change the version when write new code or modify it
-	cliVersion = "1.0.5"
+	cliVersion = "1.0.6"
 	// DO NOT CHANGE the values below
 	cliName            = "oci-reports-download"
 	cfgDirName         = ".oci"
